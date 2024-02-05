@@ -1,0 +1,16 @@
+# middle protein feature files
+*.pdb
+*.fasta
+*.hhm
+*.dssp
+*.rasa
+*.ss
+
+# middle output
+*.pyc
+*.model
+*.npy
+datasets/middlefile/
+
+# middle scripts
+
