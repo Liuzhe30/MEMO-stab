@@ -1,6 +1,5 @@
 # middle protein feature files
 *.pdb
-*.fasta
 *.hhm
 *.dssp
 *.rasa
@@ -13,4 +12,5 @@
 datasets/middlefile/
 
 # middle scripts
+preprocess/test.py
 
