@@ -49,10 +49,10 @@ sequence_list = []
 fasta_output = '../datasets/annotation/test_stab.fasta'
 with open(fasta_output, 'w+') as w:
     for i in range(stab_df.shape[0]):
-        if(stab_df['seq_before'][i] not in sequence_list):
-            sequence_list.append(stab_df['seq_before'][i])
+        if(stab_df['seq_after'][i] not in sequence_list):
+            sequence_list.append(stab_df['seq_after'][i])
             w.write('>' + stab_df['pdb_id'][i] + '_' + stab_df['pdb_chain'][i] + '|' + stab_df['seq_mutation'][i] + '|' + str(stab_df['ddg'][i]) + '\n')
-            w.write(stab_df['seq_before'][i] + '\n')
+            w.write(stab_df['seq_after'][i] + '\n')
 
 # testset2: stability prediction
 data_path = '../datasets/raw/mCSM_membrane/mcsm_membrane_pathogenicity_blind.csv'
@@ -99,7 +99,7 @@ sequence_list = []
 fasta_output = '../datasets/annotation/test_patho.fasta'
 with open(fasta_output, 'w+') as w:
     for i in range(patho_df.shape[0]):
-        if(patho_df['seq_before'][i] not in sequence_list):
-            sequence_list.append(patho_df['seq_before'][i])
+        if(patho_df['seq_after'][i] not in sequence_list):
+            sequence_list.append(patho_df['seq_after'][i])
             w.write('>' + patho_df['pdb_id'][i] + '_' + patho_df['pdb_chain'][i] + '|' + patho_df['seq_mutation'][i] + '|' + patho_df['class'][i] + '\n')
-            w.write(patho_df['seq_before'][i] + '\n')
+            w.write(patho_df['seq_after'][i] + '\n')
