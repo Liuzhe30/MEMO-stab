@@ -5,7 +5,7 @@ sys.path.append("..")
 from src import fetchPDBSequence
 
 # step 1: fetch trainset sequence
-data_path = '../datasets/raw/mCSM_membrane/mcsm_membrane_stability_train.csv'
+data_path = '../datasets/cleaned/mCSM_membrane/mcsm_membrane_stability_train.tsv'
 PDB_path = '../datasets/raw/mCSM_membrane/pdb_stability/'
 df = pd.read_csv(data_path, sep='\t')
 print(df.head())

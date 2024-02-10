@@ -5,7 +5,7 @@ sys.path.append("..")
 from src import fetchPDBSequence
 
 # testset1: stability prediction
-data_path = '../datasets/raw/mCSM_membrane/mcsm_membrane_stability_blind.csv'
+data_path = '../datasets/cleaned/mCSM_membrane/mcsm_membrane_stability_blind.tsv'
 PDB_path = '../datasets/raw/mCSM_membrane/pdb_stability/'
 df = pd.read_csv(data_path, sep='\t')
 print(df.head())
@@ -54,8 +54,8 @@ with open(fasta_output, 'w+') as w:
             w.write('>' + stab_df['pdb_id'][i] + '_' + stab_df['pdb_chain'][i] + '|' + stab_df['seq_mutation'][i] + '|' + str(stab_df['ddg'][i]) + '\n')
             w.write(stab_df['seq_after'][i] + '\n')
 
-# testset2: stability prediction
-data_path = '../datasets/raw/mCSM_membrane/mcsm_membrane_pathogenicity_blind.csv'
+# testset2: pathogenicity prediction
+data_path = '../datasets/cleaned/mCSM_membrane/mcsm_membrane_pathogenicity_blind.tsv'
 PDB_path = '../datasets/raw/mCSM_membrane/pdb_pathogenicity/'
 df = pd.read_csv(data_path, sep='\t')
 print(df.head())
@@ -68,7 +68,7 @@ print(df.head())
 4  2LZ3.pdb     I22V     A  Pathogenic
 '''
 fetch = fetchPDBSequence.fetchPDBSequence()
-patho_df = pd.DataFrame(columns=['pdb_id', 'pdb_chain', 'uniprot_id', 'mutation', 'seq_mutation', 'ddg', 'seq_before', 'seq_after'])
+patho_df = pd.DataFrame(columns=['pdb_id', 'pdb_chain', 'uniprot_id', 'mutation', 'seq_mutation', 'seq_before', 'seq_after'])
 for i in range(df.shape[0]):
     pdb_file = df['PDB'][i].strip()
     chain = df['CHAIN'][i]
@@ -85,12 +85,12 @@ for i in range(df.shape[0]):
 
 print(patho_df.head())
 '''
-  pdb_id pdb_chain uniprot_id mutation seq_mutation  ddg                                         seq_before                                          seq_after       class
-0   1P49         A      space    H444R        H421R  NaN  AASRPNIILVMADDLGIGDPGCYGNKTIRTPNIDRLASGGVKLTQH...  AASRPNIILVMADDLGIGDPGCYGNKTIRTPNIDRLASGGVKLTQH...  Pathogenic
-1   2HYN         A      space      R9C          R9C  NaN  MEKVQYLTRSAIRRASTIEMPQQARQKLQNLFINFCLILICLLLIC...  MEKVQYLTCSAIRRASTIEMPQQARQKLQNLFINFCLILICLLLIC...  Pathogenic
-2   2HYN         A      space      R9H          R9H  NaN  MEKVQYLTRSAIRRASTIEMPQQARQKLQNLFINFCLILICLLLIC...  MEKVQYLTHSAIRRASTIEMPQQARQKLQNLFINFCLILICLLLIC...  Pathogenic
-3   2LNL         A      space    M268L        M240L  NaN  PCMLETETLNKYVVIIAYALVFLLSLLGNSLVMLVILYSRVGRSVT...  PCMLETETLNKYVVIIAYALVFLLSLLGNSLVMLVILYSRVGRSVT...      Benign
-4   2LZ3         A      space     I22V         I18V  NaN                       KGAIIGLMVGGVVIATVIVITLVMLKKK                       KGAIIGLMVGGVVIATVVVITLVMLKKK  Pathogenic
+  pdb_id pdb_chain uniprot_id mutation seq_mutation                                         seq_before                                          seq_after       class
+0   1P49         A      space    H444R        H421R  AASRPNIILVMADDLGIGDPGCYGNKTIRTPNIDRLASGGVKLTQH...  AASRPNIILVMADDLGIGDPGCYGNKTIRTPNIDRLASGGVKLTQH...  Pathogenic
+1   2HYN         A      space      R9C          R9C  MEKVQYLTRSAIRRASTIEMPQQARQKLQNLFINFCLILICLLLIC...  MEKVQYLTCSAIRRASTIEMPQQARQKLQNLFINFCLILICLLLIC...  Pathogenic
+2   2HYN         A      space      R9H          R9H  MEKVQYLTRSAIRRASTIEMPQQARQKLQNLFINFCLILICLLLIC...  MEKVQYLTHSAIRRASTIEMPQQARQKLQNLFINFCLILICLLLIC...  Pathogenic
+3   2LNL         A      space    M268L        M240L  PCMLETETLNKYVVIIAYALVFLLSLLGNSLVMLVILYSRVGRSVT...  PCMLETETLNKYVVIIAYALVFLLSLLGNSLVMLVILYSRVGRSVT...      Benign
+4   2LZ3         A      space     I22V         I18V                       KGAIIGLMVGGVVIATVIVITLVMLKKK                       KGAIIGLMVGGVVIATVVVITLVMLKKK  Pathogenic
 '''
 patho_df.to_pickle('../datasets/middlefile/test_patho_df.pkl')
 
