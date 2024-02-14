@@ -1,2 +1,2 @@
 # MemMut
-Memmut: sequence-based prediction of mutation effects on transmembrane proteins
+MemMut: sequence-based prediction of mutation effects on transmembrane proteins
