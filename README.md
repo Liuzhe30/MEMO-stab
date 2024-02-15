@@ -1,2 +1,3 @@
-# Impasto
-Impasto: mutation **i**mpact prediction on trans**m**embrane **p**roteins b**a**sed on **s**equences **to**wards deep learning
+# Memo
+Memo: sequence-based prediction of mutation effects on transmembrane proteins using machine learning
+
