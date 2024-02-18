@@ -18,7 +18,7 @@ print(df.head())
 4 -2.1  1PY6.pdb     Y43A     A
 '''
 fetch = fetchPDBSequence.fetchPDBSequence()
-stab_df = pd.DataFrame(columns=['pdb_id', 'pdb_chain', 'uniprot_id', 'mutation', 'seq_mutation', 'ddg', 'seq_before', 'seq_after'])
+stab_df = pd.DataFrame(columns=['pdb_id', 'pdb_chain', 'uniprot_id', 'mutation', 'shifted_mutation', 'ddg', 'seq_before', 'seq_after'])
 for i in range(df.shape[0]):
     pdb_file = df['PDB'][i].strip()
     chain = df['CHAIN'][i]
@@ -29,18 +29,18 @@ for i in range(df.shape[0]):
     seq_after = list(seq_before)
     seq_after[pos] = mutation[-1]
     seq_after = ''.join(seq_after)
-    seq_mutation = mutation[0] + str(pos+1) + mutation[-1]
-    stab_df = stab_df._append([{'pdb_id':pdb_file.split('.')[0], 'pdb_chain':chain, 'uniprot_id':'space', 'mutation':mutation, 'seq_mutation':seq_mutation, 
+    shifted_mutation = mutation[0] + str(pos+1) + mutation[-1]
+    stab_df = stab_df._append([{'pdb_id':pdb_file.split('.')[0], 'pdb_chain':chain, 'uniprot_id':'space', 'mutation':mutation, 'shifted_mutation':shifted_mutation, 
                                     'ddg':df['DDG'][i], 'seq_before':seq_before, 'seq_after':seq_after}], ignore_index=True)
 
 print(stab_df.head())
 '''
-  pdb_id pdb_chain uniprot_id mutation seq_mutation  ddg                                         seq_before                                          seq_after
-0   1PY6         A      space      E9A          E5A -0.1  TGRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVP...  TGRPAWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVP...
-1   1PY6         A      space     L13A          L9A -1.8  TGRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVP...  TGRPEWIWAALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVP...
-2   1PY6         A      space     A39P         A35P -0.6  TGRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVP...  TGRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDPKKFYAITTLVP...
-3   1PY6         A      space     F42A         F38A -2.0  TGRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVP...  TGRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKAYAITTLVP...
-4   1PY6         A      space     Y43A         Y39A -2.1  TGRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVP...  TGRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFAAITTLVP...
+  pdb_id pdb_chain uniprot_id mutation shifted_mutation  ddg                                         seq_before                                          seq_after
+0   1PY6         A      space      E9A              E5A -0.1  TGRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVP...  TGRPAWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVP...
+1   1PY6         A      space     L13A              L9A -1.8  TGRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVP...  TGRPEWIWAALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVP...
+2   1PY6         A      space     A39P             A35P -0.6  TGRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVP...  TGRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDPKKFYAITTLVP...
+3   1PY6         A      space     F42A             F38A -2.0  TGRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVP...  TGRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKAYAITTLVP...
+4   1PY6         A      space     Y43A             Y39A -2.1  TGRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVP...  TGRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFAAITTLVP...
 '''
 stab_df.to_pickle('../datasets/middlefile/train_stab_df.pkl')
 
@@ -51,7 +51,7 @@ with open(fasta_output, 'w+') as w:
     for i in range(stab_df.shape[0]):
         if(stab_df['seq_after'][i] not in sequence_list):
             sequence_list.append(stab_df['seq_after'][i])
-            w.write('>' + stab_df['pdb_id'][i] + '_' + stab_df['pdb_chain'][i] + '|' + stab_df['seq_mutation'][i] + '|' + str(stab_df['ddg'][i]) + '\n')
+            w.write('>' + stab_df['pdb_id'][i] + '_' + stab_df['pdb_chain'][i] + '|' + stab_df['shifted_mutation'][i] + '|' + str(stab_df['ddg'][i]) + '\n')
             w.write(stab_df['seq_after'][i] + '\n')
 
 # step 2: split fastas for running HHBlits
