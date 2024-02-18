@@ -44,7 +44,7 @@ print(stab_df.head())
 '''
 stab_df.to_pickle('../datasets/middlefile/train_stab_df.pkl')
 
-# generate fasta files for run HHblits:
+# generate annotation fasta file
 sequence_list = []
 fasta_output = '../datasets/annotation/train_stab.fasta'
 with open(fasta_output, 'w+') as w:
@@ -52,51 +52,70 @@ with open(fasta_output, 'w+') as w:
         if(stab_df['seq_after'][i] not in sequence_list):
             sequence_list.append(stab_df['seq_after'][i])
             w.write('>' + stab_df['pdb_id'][i] + '_' + stab_df['pdb_chain'][i] + '|' + stab_df['shifted_mutation'][i] + '|' + str(stab_df['ddg'][i]) + '\n')
+            w.write(stab_df['seq_before'][i] + '\n')
+
+# generate processed fasta file
+sequence_list = []
+fasta_output = '../datasets/processed/train_stab.fasta'
+with open(fasta_output, 'w+') as w:
+    for i in range(stab_df.shape[0]):
+        if(stab_df['seq_before'][i] not in sequence_list):
+            sequence_list.append(stab_df['seq_before'][i])
+            w.write('>' + stab_df['pdb_id'][i] + '_' + stab_df['pdb_chain'][i] + '|original|\n')
+            w.write(stab_df['seq_before'][i] + '\n')
+        if(stab_df['seq_after'][i] not in sequence_list):
+            sequence_list.append(stab_df['seq_after'][i])
+            w.write('>' + stab_df['pdb_id'][i] + '_' + stab_df['pdb_chain'][i] + '|' + stab_df['shifted_mutation'][i] + '|' + str(stab_df['ddg'][i]) + '\n')
             w.write(stab_df['seq_after'][i] + '\n')
 
+##########################################
 # step 2: split fastas for running HHBlits
 fasta_fold = '../datasets/middlefile/fasta/stab/'
-train_fasta = '../datasets/annotation/train_stab.fasta'
-test_fasta = '../datasets/annotation/test_stab.fasta'
+train_fasta = '../datasets/processed/train_stab.fasta'
+test_fasta = '../datasets/processed/test_stab.fasta'
 with open(train_fasta, 'r') as r:
     line = r.readline()
     while line:
-        pdb_id = line[1:].split('|')[0]
-        mutation = line[1:].split('|')[1]
-        pos = int(mutation[1:-1]) - 1
-        before_aa = mutation[0]
-        line = r.readline()
-        # fetch mutated sequence
-        fastaline = line.strip()
-        with open(fasta_fold + pdb_id + '_' + mutation + '.fasta', 'w+') as w:
-            w.write('>' + pdb_id + '|' + mutation + '\n')
-            w.write(fastaline)
-        # generate original sequence
-        seq_after = list(fastaline)
-        seq_after[pos] = mutation[-1]
-        seq_after = ''.join(seq_after)
-        with open(fasta_fold + pdb_id + '.fasta', 'w+') as w:
-            w.write('>' + pdb_id + '\n')
-            w.write(seq_after)
-        line = r.readline()
+        # process original sequences
+        if(line[1:].split('|')[1] == 'original'):
+            pdb_id = line[1:].split('|')[0]
+            line = r.readline()
+            # fetch mutated sequence
+            fastaline = line.strip()
+            with open(fasta_fold + pdb_id + '.fasta', 'w+') as w:
+                w.write('>' + pdb_id + '\n')
+                w.write(fastaline)
+            line = r.readline()
+        else:
+            pdb_id = line[1:].split('|')[0]
+            mutation = line[1:].split('|')[1]
+            line = r.readline()
+            # fetch mutated sequence
+            fastaline = line.strip()
+            with open(fasta_fold + pdb_id + '_' + mutation + '.fasta', 'w+') as w:
+                w.write('>' + pdb_id + '|' + mutation + '\n')
+                w.write(fastaline)
+            line = r.readline()
 with open(test_fasta, 'r') as r:
     line = r.readline()
     while line:
-        pdb_id = line[1:].split('|')[0]
-        mutation = line[1:].split('|')[1]
-        pos = int(mutation[1:-1]) - 1
-        before_aa = mutation[0]
-        line = r.readline()
-        # fetch mutated sequence
-        fastaline = line.strip()
-        with open(fasta_fold + pdb_id + '_' + mutation + '.fasta', 'w+') as w:
-            w.write('>' + pdb_id + '|' + mutation + '\n')
-            w.write(fastaline)
-        # generate original sequence
-        seq_after = list(fastaline)
-        seq_after[pos] = mutation[-1]
-        seq_after = ''.join(seq_after)
-        with open(fasta_fold + pdb_id + '.fasta', 'w+') as w:
-            w.write('>' + pdb_id + '\n')
-            w.write(seq_after)
-        line = r.readline()
+        # process original sequences
+        if(line[1:].split('|')[1] == 'original'):
+            pdb_id = line[1:].split('|')[0]
+            line = r.readline()
+            # fetch mutated sequence
+            fastaline = line.strip()
+            with open(fasta_fold + pdb_id + '.fasta', 'w+') as w:
+                w.write('>' + pdb_id + '\n')
+                w.write(fastaline)
+            line = r.readline()
+        else:
+            pdb_id = line[1:].split('|')[0]
+            mutation = line[1:].split('|')[1]
+            line = r.readline()
+            # fetch mutated sequence
+            fastaline = line.strip()
+            with open(fasta_fold + pdb_id + '_' + mutation + '.fasta', 'w+') as w:
+                w.write('>' + pdb_id + '|' + mutation + '\n')
+                w.write(fastaline)
+            line = r.readline()

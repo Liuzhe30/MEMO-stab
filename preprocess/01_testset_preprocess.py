@@ -44,7 +44,7 @@ print(stab_df.head())
 '''
 stab_df.to_pickle('../datasets/middlefile/test_stab_df.pkl')
 
-# generate fasta files:
+# generate annotation fasta files
 sequence_list = []
 fasta_output = '../datasets/annotation/test_stab.fasta'
 with open(fasta_output, 'w+') as w:
@@ -52,8 +52,24 @@ with open(fasta_output, 'w+') as w:
         if(stab_df['seq_after'][i] not in sequence_list):
             sequence_list.append(stab_df['seq_after'][i])
             w.write('>' + stab_df['pdb_id'][i] + '_' + stab_df['pdb_chain'][i] + '|' + stab_df['shifted_mutation'][i] + '|' + str(stab_df['ddg'][i]) + '\n')
+            w.write(stab_df['seq_before'][i] + '\n')
+
+# generate processed fasta file
+sequence_list = []
+fasta_output = '../datasets/processed/test_stab.fasta'
+with open(fasta_output, 'w+') as w:
+    for i in range(stab_df.shape[0]):
+        if(stab_df['seq_before'][i] not in sequence_list):
+            sequence_list.append(stab_df['seq_before'][i])
+            w.write('>' + stab_df['pdb_id'][i] + '_' + stab_df['pdb_chain'][i] + '|original|\n')
+            w.write(stab_df['seq_before'][i] + '\n')
+        if(stab_df['seq_after'][i] not in sequence_list):
+            sequence_list.append(stab_df['seq_after'][i])
+            w.write('>' + stab_df['pdb_id'][i] + '_' + stab_df['pdb_chain'][i] + '|' + stab_df['shifted_mutation'][i] + '|' + str(stab_df['ddg'][i]) + '\n')
             w.write(stab_df['seq_after'][i] + '\n')
 
+
+####################################
 # testset2: pathogenicity prediction
 data_path = '../datasets/cleaned/mCSM_membrane/mcsm_membrane_pathogenicity_blind.tsv'
 PDB_path = '../datasets/raw/mCSM_membrane/pdb_pathogenicity/'
@@ -94,7 +110,7 @@ print(patho_df.head())
 '''
 patho_df.to_pickle('../datasets/middlefile/test_patho_df.pkl')
 
-# generate fasta files:
+# generate annotation fasta file
 sequence_list = []
 fasta_output = '../datasets/annotation/test_patho.fasta'
 with open(fasta_output, 'w+') as w:
@@ -102,4 +118,18 @@ with open(fasta_output, 'w+') as w:
         if(patho_df['seq_after'][i] not in sequence_list):
             sequence_list.append(patho_df['seq_after'][i])
             w.write('>' + patho_df['pdb_id'][i] + '_' + patho_df['pdb_chain'][i] + '|' + patho_df['shifted_mutation'][i] + '|' + patho_df['class'][i] + '\n')
-            w.write(patho_df['seq_after'][i] + '\n')
+            w.write(patho_df['seq_before'][i] + '\n')
+
+# generate processed fasta file
+sequence_list = []
+fasta_output = '../datasets/processed/test_patho.fasta'
+with open(fasta_output, 'w+') as w:
+    for i in range(stab_df.shape[0]):
+        if(stab_df['seq_before'][i] not in sequence_list):
+            sequence_list.append(stab_df['seq_before'][i])
+            w.write('>' + stab_df['pdb_id'][i] + '_' + stab_df['pdb_chain'][i] + '|original|\n')
+            w.write(stab_df['seq_before'][i] + '\n')
+        if(stab_df['seq_after'][i] not in sequence_list):
+            sequence_list.append(stab_df['seq_after'][i])
+            w.write('>' + stab_df['pdb_id'][i] + '_' + stab_df['pdb_chain'][i] + '|' + stab_df['shifted_mutation'][i] + '|' + str(stab_df['ddg'][i]) + '\n')
+            w.write(stab_df['seq_after'][i] + '\n')

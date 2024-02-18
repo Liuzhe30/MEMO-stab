@@ -10,6 +10,8 @@
 *.model
 *.npy
 datasets/middlefile/
+datasets/raw/
+datasets/cleaned/
 
 # middle scripts
 preprocess/test.py
