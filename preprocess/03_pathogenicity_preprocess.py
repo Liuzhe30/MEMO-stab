@@ -29,8 +29,14 @@ with open(fasta_file,'r') as r:
         line = r.readline()
 
 print(patho_df.head())
+print(patho_df.shape) # (19659, 8)
 '''
-
+  pdb_id pdb_chain uniprot_id mutation shifted_mutation                                         seq_before                                          seq_after       class
+0  space     space     P35670   A1003T           A1003T  MPEQERQITAREGASRKILSKLSLPTRAWEPAMKKSFAFDNVGYEG...  MPEQERQITAREGASRKILSKLSLPTRAWEPAMKKSFAFDNVGYEG...  Pathogenic
+1  space     space     P35670   A1003V           A1003V  MPEQERQITAREGASRKILSKLSLPTRAWEPAMKKSFAFDNVGYEG...  MPEQERQITAREGASRKILSKLSLPTRAWEPAMKKSFAFDNVGYEG...  Pathogenic
+2  space     space     P13569   A1006E           A1006E  MQRSPLEKASVVSKLFFSWTRPILRKGYRQRLELSDIYQIPSVDSA...  MQRSPLEKASVVSKLFFSWTRPILRKGYRQRLELSDIYQIPSVDSA...  Pathogenic
+3  space     space     Q04656   A1007V           A1007V  MDPSMGVNSVTISVEGMTCNSCVWTIEQQIGKVNGVHHIKVSLEEK...  MDPSMGVNSVTISVEGMTCNSCVWTIEQQIGKVNGVHHIKVSLEEK...  Pathogenic
+4  space     space     Q13423   A1008P           A1008P  MANLLKTVVTGCSCPLLSNLGSCKGLRVKKDFLRTFYTHQELWCKA...  MANLLKTVVTGCSCPLLSNLGSCKGLRVKKDFLRTFYTHQELWCKA...  Pathogenic
 '''
 patho_df.to_pickle('../datasets/middlefile/train_patho_df.pkl')
 
@@ -41,11 +47,11 @@ with open(fasta_output, 'w+') as w:
     for i in range(patho_df.shape[0]):
         if(patho_df['seq_before'][i] not in sequence_list):
             sequence_list.append(patho_df['seq_before'][i])
-            w.write('>' + patho_df['pdb_id'][i] + '_' + patho_df['pdb_chain'][i] + '|original|\n')
+            w.write('>' + patho_df['uniprot_id'][i] + '|original|\n')
             w.write(patho_df['seq_before'][i] + '\n')
         if(patho_df['seq_after'][i] not in sequence_list):
             sequence_list.append(patho_df['seq_after'][i])
-            w.write('>' + patho_df['pdb_id'][i] + '_' + patho_df['pdb_chain'][i] + '|' + patho_df['shifted_mutation'][i] + '|' + str(patho_df['ddg'][i]) + '\n')
+            w.write('>' + patho_df['uniprot_id'][i] + '|' + patho_df['shifted_mutation'][i] + '|' + str(patho_df['class'][i]) + '\n')
             w.write(patho_df['seq_after'][i] + '\n')
 
 
