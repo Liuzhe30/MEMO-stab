@@ -5,6 +5,8 @@ import sys
 # step 1: generate training set
 fasta_file = '../datasets/annotation/train_patho.fasta'
 patho_df = pd.DataFrame(columns=['pdb_id', 'pdb_chain', 'uniprot_id', 'mutation', 'shifted_mutation', 'seq_before', 'seq_after', 'class'])
+patho_df_0_1024 = pd.DataFrame(columns=['pdb_id', 'pdb_chain', 'uniprot_id', 'mutation', 'shifted_mutation', 'seq_before', 'seq_after', 'class'])
+patho_df_1024_ = pd.DataFrame(columns=['pdb_id', 'pdb_chain', 'uniprot_id', 'mutation', 'shifted_mutation', 'seq_before', 'seq_after', 'class'])
 
 with open(fasta_file,'r') as r:
     line = r.readline()
@@ -26,10 +28,18 @@ with open(fasta_file,'r') as r:
         seq_after = ''.join(seq_after)
         patho_df = patho_df._append([{'pdb_id':pdb_id, 'pdb_chain':pdb_chain, 'uniprot_id':uniprot_id, 'mutation':mutation, 'shifted_mutation':shifted_mutation, 
                                      'seq_before':seq_before, 'seq_after':seq_after, 'class':label}], ignore_index=True)
+        if(len(seq_before) <= 1024):
+            patho_df_0_1024 = patho_df_0_1024._append([{'pdb_id':pdb_id, 'pdb_chain':pdb_chain, 'uniprot_id':uniprot_id, 'mutation':mutation, 'shifted_mutation':shifted_mutation, 
+                                     'seq_before':seq_before, 'seq_after':seq_after, 'class':label}], ignore_index=True)
+        elif(len(seq_before) > 1024):
+            patho_df_1024_ = patho_df_1024_._append([{'pdb_id':pdb_id, 'pdb_chain':pdb_chain, 'uniprot_id':uniprot_id, 'mutation':mutation, 'shifted_mutation':shifted_mutation, 
+                                     'seq_before':seq_before, 'seq_after':seq_after, 'class':label}], ignore_index=True)
         line = r.readline()
 
 print(patho_df.head())
 print(patho_df.shape) # (19659, 8)
+print(patho_df_0_1024.shape) # (13153, 8)
+print(patho_df_1024_.shape) # (6506, 8)
 '''
   pdb_id pdb_chain uniprot_id mutation shifted_mutation                                         seq_before                                          seq_after       class
 0  space     space     P35670   A1003T           A1003T  MPEQERQITAREGASRKILSKLSLPTRAWEPAMKKSFAFDNVGYEG...  MPEQERQITAREGASRKILSKLSLPTRAWEPAMKKSFAFDNVGYEG...  Pathogenic
@@ -39,6 +49,8 @@ print(patho_df.shape) # (19659, 8)
 4  space     space     Q13423   A1008P           A1008P  MANLLKTVVTGCSCPLLSNLGSCKGLRVKKDFLRTFYTHQELWCKA...  MANLLKTVVTGCSCPLLSNLGSCKGLRVKKDFLRTFYTHQELWCKA...  Pathogenic
 '''
 patho_df.to_pickle('../datasets/middlefile/train_patho_df.pkl')
+patho_df_0_1024.to_pickle('../datasets/middlefile/train_patho_df_0_1024.pkl')
+patho_df_1024_.to_pickle('../datasets/middlefile/train_patho_df_1024_.pkl')
 
 # generate processed fasta file
 sequence_list = []
