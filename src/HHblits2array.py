@@ -2,7 +2,7 @@
 import numpy as np
 
 class HHblits2array():
-    def convet(self, filename, fasta_len):
+    def convert(self, filename, fasta_len):
         with open(filename) as hhm_file:     
             hhm_matrix = np.zeros([fasta_len, 30], float)
             hhm_line = hhm_file.readline()
