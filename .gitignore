@@ -12,6 +12,7 @@
 datasets/middlefile/
 datasets/raw/
 datasets/cleaned/
+experiment/baseline_exp/model/
 
 # middle scripts
 preprocess/test.py
