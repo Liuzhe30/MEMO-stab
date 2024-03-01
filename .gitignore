@@ -9,7 +9,7 @@
 *.pyc
 *.model
 *.npy
-datasets/middlefile/
+datasets/middlefile/fasta/
 datasets/raw/
 datasets/cleaned/
 experiment/baseline_exp/model/
