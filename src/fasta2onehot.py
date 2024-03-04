@@ -9,7 +9,7 @@ protein_dict = {'C':eyes[0], 'D':eyes[1], 'S':eyes[2], 'Q':eyes[3], 'K':eyes[4],
 
 class fasta2onehot():
     def convert(self, fastastring, maxlen):
-        onehot_matrix = np.zeros([maxlen, 20], float)
+        onehot_matrix = np.zeros([maxlen, 20], int)
         for i in range(len(fastastring)):
             onehot = protein_dict[fastastring[i]]
             onehot_matrix[i] = onehot

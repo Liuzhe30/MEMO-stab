@@ -10,10 +10,12 @@
 *.model
 *.npy
 datasets/middlefile/fasta/
+datasets/final/
 datasets/raw/
 datasets/cleaned/
 experiment/baseline_exp/model/
 
 # middle scripts
 preprocess/test.py
+training_MEMO_stab_noDA.py
 
