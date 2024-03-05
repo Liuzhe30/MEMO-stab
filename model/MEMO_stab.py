@@ -36,9 +36,9 @@ def build_MEMO_stab(protein_embedding):
 
     if(protein_embedding == 'no'):
         
-        seq_embed_dim_bet = 30
-        input1 = Input(shape=(maxlen, 4+30), name = 'input_before') 
-        input2 = Input(shape=(maxlen, 4+30), name = 'input_after') 
+        seq_embed_dim_bet = 14
+        input1 = Input(shape=(maxlen, 20+30), name = 'input_before') 
+        input2 = Input(shape=(maxlen, 20+30), name = 'input_after') 
         input3 = Input(shape=(maxlen,), name = 'input_mask') 
     #elif()
 
