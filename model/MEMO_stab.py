@@ -81,7 +81,7 @@ def build_MEMO_stab(protein_embedding):
     merged = layers.Dense(32)(merged)
     merged = layers.Flatten()(merged)
     merged = layers.Dense(32)(merged)
-    output = layers.Dense(1, activation = 'relu')(merged)
+    output = layers.Dense(1)(merged)
 
     model = Model(inputs=[input1, input2, input3], outputs=output)
     return model

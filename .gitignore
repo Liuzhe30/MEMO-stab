@@ -15,6 +15,9 @@ datasets/raw/
 datasets/cleaned/
 experiment/baseline_exp/model/
 model/images/
+model/weights_noda/
+model/weights_da_rev/
+model/weights_da_rev_non/
 
 # middle scripts
 preprocess/test.py

@@ -38,7 +38,7 @@ for i in range(train_pkl.shape[0]):
     train_da_df2 = train_da_df2._append([{'seq_before_onehot':seq_before, 'seq_after_onehot':seq_after, 
                                     'seq_before_hhblits':hhm_before, 'seq_after_hhblits':hhm_after,'label':train_pkl['ddg'][i],'seq_len':seq_len}], ignore_index=True)
     train_da_df2 = train_da_df2._append([{'seq_before_onehot':seq_before, 'seq_after_onehot':seq_before, 
-                                    'seq_before_hhblits':hhm_before, 'seq_after_hhblits':hhm_before,'label':0}], ignore_index=True)
+                                    'seq_before_hhblits':hhm_before, 'seq_after_hhblits':hhm_before,'label':0,'seq_len':seq_len}], ignore_index=True)
     
 
     # reversed items
@@ -51,7 +51,7 @@ for i in range(train_pkl.shape[0]):
     train_da_df2 = train_da_df2._append([{'seq_before_onehot':seq_before, 'seq_after_onehot':seq_after, 
                                     'seq_before_hhblits':hhm_before, 'seq_after_hhblits':hhm_after,'label':-train_pkl['ddg'][i],'seq_len':seq_len}], ignore_index=True)
     train_da_df2 = train_da_df2._append([{'seq_before_onehot':seq_before, 'seq_after_onehot':seq_before, 
-                                    'seq_before_hhblits':hhm_before, 'seq_after_hhblits':hhm_before,'label':0}], ignore_index=True)
+                                    'seq_before_hhblits':hhm_before, 'seq_after_hhblits':hhm_before,'label':0,'seq_len':seq_len}], ignore_index=True)
 
 train_origin_df.to_pickle('../datasets/final/train_stab_da(ori)_onehot_hhblits.pkl')
 train_da_df.to_pickle('../datasets/final/train_stab_da(ori+rev)_onehot_hhblits.pkl')
@@ -64,6 +64,15 @@ print(train_da_df.head())
 2  [[0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,...  [[0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,...  [[99999.0, 99999.0, 99999.0, 99999.0, 99999.0,...  [[99999.0, 99999.0, 99999.0, 99999.0, 99999.0,...   -1.8     227
 3  [[0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,...  [[0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,...  [[99999.0, 99999.0, 99999.0, 99999.0, 99999.0,...  [[99999.0, 99999.0, 99999.0, 99999.0, 99999.0,...    1.8     227
 4  [[0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,...  [[0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,...  [[99999.0, 99999.0, 99999.0, 99999.0, 99999.0,...  [[99999.0, 99999.0, 99999.0, 99999.0, 99999.0,...   -0.6     227
+'''
+print(train_da_df2.head())
+'''
+                                   seq_before_onehot                                   seq_after_onehot                                 seq_before_hhblits                                  seq_after_hhblits  label seq_len
+0  [[0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,...  [[0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,...  [[99999.0, 99999.0, 99999.0, 99999.0, 99999.0,...  [[99999.0, 99999.0, 99999.0, 99999.0, 99999.0,...   -0.1     227
+1  [[0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,...  [[0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,...  [[99999.0, 99999.0, 99999.0, 99999.0, 99999.0,...  [[99999.0, 99999.0, 99999.0, 99999.0, 99999.0,...    0.0     227
+2  [[0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,...  [[0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,...  [[99999.0, 99999.0, 99999.0, 99999.0, 99999.0,...  [[99999.0, 99999.0, 99999.0, 99999.0, 99999.0,...    0.1     227
+3  [[0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,...  [[0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,...  [[99999.0, 99999.0, 99999.0, 99999.0, 99999.0,...  [[99999.0, 99999.0, 99999.0, 99999.0, 99999.0,...    0.0     227
+4  [[0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,...  [[0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,...  [[99999.0, 99999.0, 99999.0, 99999.0, 99999.0,...  [[99999.0, 99999.0, 99999.0, 99999.0, 99999.0,...   -1.8     227
 '''
 
 # generate reversed mcsm test dataset

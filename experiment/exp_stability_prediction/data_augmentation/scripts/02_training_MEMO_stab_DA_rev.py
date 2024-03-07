@@ -73,7 +73,7 @@ if __name__ == "__main__":
                         help="Initial learning rate")
     parser.add_argument('--lr_decay', default=0.05, type=float,
                         help="The value multiplied by lr at each epoch. Set a larger value for larger epochs") 
-    parser.add_argument('--save_dir', default='model/weights_noda/')
+    parser.add_argument('--save_dir', default='model/weights_da_rev/')
     parser.add_argument('--debug', action='store_true',
                         help="Save weights by TensorBoard")
     args = parser.parse_args()
@@ -83,7 +83,7 @@ if __name__ == "__main__":
         os.makedirs(path)
 
     # load datasets
-    train_pkl = pd.read_pickle('datasets/final/train_stab_da(ori)_onehot_hhblits.pkl')
+    train_pkl = pd.read_pickle('datasets/final/train_stab_da(ori+rev)_onehot_hhblits.pkl')
     test_pkl1 = pd.read_pickle('datasets/final/test_stab_da(non)_onehot_hhblits.pkl')
     test_pkl2 = pd.read_pickle('datasets/final/test_stab_da(ori+rev)_onehot_hhblits.pkl')
     test_pkl3 = pd.read_pickle('datasets/final/test_stab_da(rev)_onehot_hhblits.pkl')
@@ -126,9 +126,10 @@ if __name__ == "__main__":
           epochs = args.epochs, verbose=1,
           batch_size = batch_size,
           validation_split = 0.2,
+          #validation_data = (x_test, y_test),
           #callbacks = [log, tensorboard, checkpoint, lr_decay],
           callbacks = [log, checkpoint],
-          shuffle = False,
+          shuffle = True,
           workers = 1).history
 
     print('Trained model saved to \'%s/trained_model.tf\'' % args.save_dir)
