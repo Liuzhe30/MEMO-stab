@@ -1,4 +1,4 @@
-# generate data augmentated dataset for training
+# generate protein embedding config file
 import pandas as pd
 import numpy as np
 import json
@@ -69,3 +69,11 @@ main_dict['ProtT5-XL-BFD']['embedding_dim'] = 1024
 
 with open(output_path, 'w+') as w:
     json.dump(main_dict, w, indent=4)
+
+# test loading
+test_pkl = pd.read_pickle('../datasets/protein_embedding/Esm/train_stab_esm2_t6_8M_UR50D_320.pkl')
+print(test_pkl.keys())
+'''
+dict_keys(['1PY6_A|original', '1PY6_A|E5A', '1PY6_A|L9A', '1PY6_A|A35P',...])
+'''
+print(test_pkl['1PY6_A|original'].shape) # (227, 320)
