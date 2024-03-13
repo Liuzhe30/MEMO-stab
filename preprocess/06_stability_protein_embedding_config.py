@@ -2,6 +2,7 @@
 import pandas as pd
 import numpy as np
 import json
+import pickle
 
 output_path = '../datasets/protein_embedding/summary.config'
 
@@ -77,3 +78,31 @@ print(test_pkl.keys())
 dict_keys(['1PY6_A|original', '1PY6_A|E5A', '1PY6_A|L9A', '1PY6_A|A35P',...])
 '''
 print(test_pkl['1PY6_A|original'].shape) # (227, 320)
+
+# clean head annotations
+for key in main_dict.keys():
+    train_embedding = pd.read_pickle('../datasets/protein_embedding/' + main_dict[key]['train_stab_path'])
+    test_embedding = pd.read_pickle('../datasets/protein_embedding/' + main_dict[key]['test_stab_path'])
+    new_train_embedding = {}
+    new_test_embedding = {}
+    for sub_key in train_embedding.keys():
+        if(len(sub_key.split('|')) == 3):
+            new_key = sub_key.split('|')[0] + '|' + sub_key.split('|')[1]
+            new_train_embedding[new_key] = train_embedding[sub_key]
+        else:
+            new_train_embedding[sub_key] = train_embedding[sub_key]
+    for sub_key in test_embedding.keys():
+        if(len(sub_key.split('|')) == 3):
+            new_key = sub_key.split('|')[0] + '|' + sub_key.split('|')[1]
+            new_test_embedding[new_key] = test_embedding[sub_key]
+        else:
+            new_test_embedding[sub_key] = test_embedding[sub_key]
+    with open('../datasets/protein_embedding_fix/' + main_dict[key]['train_stab_path'], 'wb') as w:
+        pickle.dump(new_train_embedding, w)
+    with open('../datasets/protein_embedding_fix/' + main_dict[key]['test_stab_path'], 'wb') as w:
+        pickle.dump(new_test_embedding, w)
+    #new_train_embedding.to_pickle('../datasets/protein_embedding_fix/' + main_dict[key]['train_stab_path'])
+    #new_test_embedding.to_pickle('../datasets/protein_embedding_fix/' + main_dict[key]['test_stab_path'])
+# test loading
+test_pkl = pd.read_pickle('../datasets/protein_embedding_fix/Esm/train_stab_esm2_t6_8M_UR50D_320.pkl')
+print(test_pkl.keys())

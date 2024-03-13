@@ -14,6 +14,7 @@ datasets/final/
 datasets/raw/
 datasets/cleaned/
 datasets/protein_embedding/
+datasets/protein_embedding_fix/
 experiment/baseline_exp/model/
 model/images/
 model/weights_noda/
