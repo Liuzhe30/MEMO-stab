@@ -13,6 +13,13 @@ with open(config_path, 'r') as r:
 maxlen = 512
 output_path = '../datasets/final/'
 
+def padding(embedding):
+    pad = np.zeros([maxlen, embedding.shape[1]],dtype=float)
+    for i in range(embedding.shape[0]):
+        for j in range(embedding.shape[1]):
+            pad[i][j] = embedding[i][j]
+    return pad.T
+
 train_pkl = pd.read_pickle('../datasets/middlefile/train_stab_df.pkl')
 test_pkl = pd.read_pickle('../datasets/middlefile/test_stab_df.pkl')
 test_reversed_mcsm = pd.read_pickle('../datasets/middlefile/test_stab_reversed_df.pkl')
@@ -38,26 +45,26 @@ for key in config_dict.keys():
         seq_len = len(train_pkl['seq_before'][i])
         before_head = train_pkl['pdb_id'][i] + '_' + train_pkl['pdb_chain'][i] + '|original'
         after_head = train_pkl['pdb_id'][i] + '_' + train_pkl['pdb_chain'][i] + '|' + train_pkl['shifted_mutation'][i]
-        train_origin_df = train_origin_df._append([{'seq_before':train_embedding[before_head], 'seq_after':train_embedding[after_head], 
+        train_origin_df = train_origin_df._append([{'seq_before':padding(train_embedding[before_head]), 'seq_after':padding(train_embedding[after_head]), 
                                     'label':train_pkl['ddg'][i],'seq_len':seq_len}], ignore_index=True)
-        train_da_df = train_da_df._append([{'seq_before':train_embedding[before_head], 'seq_after':train_embedding[after_head], 
+        train_da_df = train_da_df._append([{'seq_before':padding(train_embedding[before_head]), 'seq_after':padding(train_embedding[after_head]), 
                                     'label':train_pkl['ddg'][i],'seq_len':seq_len}], ignore_index=True)
-        train_da_df2 = train_da_df2._append([{'seq_before':train_embedding[before_head], 'seq_after':train_embedding[after_head], 
-                                    'label':train_pkl['ddg'][i],'seq_len':seq_len}], ignore_index=True)
-        train_da_df2 = train_da_df2._append([{'seq_before':train_embedding[before_head], 'seq_after':train_embedding[before_head], 
-                                    'label':0,'seq_len':seq_len}], ignore_index=True)
+        #train_da_df2 = train_da_df2._append([{'seq_before':padding(train_embedding[before_head]), 'seq_after':padding(train_embedding[after_head]), 
+                                    #'label':train_pkl['ddg'][i],'seq_len':seq_len}], ignore_index=True)
+        #train_da_df2 = train_da_df2._append([{'seq_before':padding(train_embedding[before_head]), 'seq_after':padding(train_embedding[before_head]), 
+                                    #'label':0,'seq_len':seq_len}], ignore_index=True)
 
         # reversed items
-        train_da_df = train_da_df._append([{'seq_before':train_embedding[after_head], 'seq_after':train_embedding[before_head], 
+        train_da_df = train_da_df._append([{'seq_before':padding(train_embedding[after_head]), 'seq_after':padding(train_embedding[before_head]), 
                                     'label':-train_pkl['ddg'][i],'seq_len':seq_len}], ignore_index=True)
-        train_da_df2 = train_da_df2._append([{'seq_before':train_embedding[after_head], 'seq_after':train_embedding[before_head], 
-                                    'label':-train_pkl['ddg'][i],'seq_len':seq_len}], ignore_index=True)
-        train_da_df2 = train_da_df2._append([{'seq_before':train_embedding[after_head], 'seq_after':train_embedding[after_head], 
-                                    'label':0,'seq_len':seq_len}], ignore_index=True)
+        #train_da_df2 = train_da_df2._append([{'seq_before':padding(train_embedding[after_head]), 'seq_after':padding(train_embedding[before_head]), 
+                                    #'label':-train_pkl['ddg'][i],'seq_len':seq_len}], ignore_index=True)
+        #train_da_df2 = train_da_df2._append([{'seq_before':padding(train_embedding[after_head]), 'seq_after':padding(train_embedding[after_head]), 
+                                    #'label':0,'seq_len':seq_len}], ignore_index=True)
     
     train_origin_df.to_pickle('../datasets/final/protein_embedding/train_stab_da(ori)_' + key + '.pkl')
     train_da_df.to_pickle('../datasets/final/protein_embedding/train_stab_da(ori+rev)_' + key + '.pkl')
-    train_da_df2.to_pickle('../datasets/final/protein_embedding/train_stab_da(ori+rev+non)_' + key + '.pkl')
+    #train_da_df2.to_pickle('../datasets/final/protein_embedding/train_stab_da(ori+rev+non)_' + key + '.pkl')
 
 print(train_da_df.head())
 '''
@@ -88,14 +95,15 @@ print(test_reversed_mcsm.head())
 3   1AFO         A      space     V80A             V19A  0.4           VQLAHHFSEPEITLIIFGAMAGVIGTILLISYGIRRLIKK           VQLAHHFSEPEITLIIFGVMAGVIGTILLISYGIRRLIKK
 4   2K73         A      space     A62G             A62G  1.3  MLRFLNQASQGRGAWLLMAFTALALELTALWFQHVMLLKPCVLSIY...  MLRFLNQASQGRGAWLLMAFTALALELTALWFQHVMLLKPCVLSIY...
 '''
-test_mcsm_reversed_df = pd.DataFrame(columns=['seq_before', 'seq_after', 'label','seq_len'])
+
 for key in config_dict.keys():
+    test_mcsm_reversed_df = pd.DataFrame(columns=['seq_before', 'seq_after', 'label','seq_len'])
     test_embedding = pd.read_pickle(protein_embedding_path + config_dict[key]['test_stab_path'])
     for i in range(test_reversed_mcsm.shape[0]):
         seq_len = len(test_reversed_mcsm['seq_before'][i])
         before_head = test_reversed_mcsm['pdb_id'][i] + '_' + test_reversed_mcsm['pdb_chain'][i] + '|' + test_reversed_mcsm['shifted_mutation'][i]
         after_head = test_reversed_mcsm['pdb_id'][i] + '_' + test_reversed_mcsm['pdb_chain'][i] + '|original'
-        test_mcsm_reversed_df = test_mcsm_reversed_df._append([{'seq_before':test_embedding[before_head], 'seq_after':test_embedding[after_head], 
+        test_mcsm_reversed_df = test_mcsm_reversed_df._append([{'seq_before':padding(test_embedding[before_head]), 'seq_after':padding(test_embedding[after_head]), 
                                     'label':test_reversed_mcsm['ddg'][i],'seq_len':seq_len}], ignore_index=True)
         test_mcsm_reversed_df.to_pickle('../datasets/final/protein_embedding/test_stab_mcsm(rev)_' + key + '.pkl')
 print(test_mcsm_reversed_df.head())
@@ -109,33 +117,34 @@ print(test_mcsm_reversed_df.head())
 '''
 
 # generate reversed test dataset
-test_origin_df = pd.DataFrame(columns=['seq_before', 'seq_after', 'label','seq_len'])
-test_da_df = pd.DataFrame(columns=['seq_before', 'seq_after', 'label','seq_len'])
-test_reversed_df = pd.DataFrame(columns=['seq_before', 'seq_after', 'label','seq_len'])
-test_da_df2 = pd.DataFrame(columns=['seq_before', 'seq_after', 'label','seq_len'])
-
 for key in config_dict.keys():
+
+    test_origin_df = pd.DataFrame(columns=['seq_before', 'seq_after', 'label','seq_len'])
+    test_da_df = pd.DataFrame(columns=['seq_before', 'seq_after', 'label','seq_len'])
+    test_reversed_df = pd.DataFrame(columns=['seq_before', 'seq_after', 'label','seq_len'])
+    test_da_df2 = pd.DataFrame(columns=['seq_before', 'seq_after', 'label','seq_len'])
+
     test_embedding = pd.read_pickle(protein_embedding_path + config_dict[key]['test_stab_path'])
     for i in range(test_pkl.shape[0]):
         before_head = test_pkl['pdb_id'][i] + '_' + test_pkl['pdb_chain'][i] + '|original'
         after_head = test_pkl['pdb_id'][i] + '_' + test_pkl['pdb_chain'][i] + '|' + test_pkl['shifted_mutation'][i]
-        test_origin_df = test_origin_df._append([{'seq_before':test_embedding[before_head], 'seq_after':test_embedding[after_head], 
+        test_origin_df = test_origin_df._append([{'seq_before':padding(test_embedding[before_head]), 'seq_after':padding(test_embedding[after_head]), 
                                     'label':test_pkl['ddg'][i],'seq_len':seq_len}], ignore_index=True)
-        test_da_df = test_da_df._append([{'seq_before':test_embedding[before_head], 'seq_after':test_embedding[after_head], 
+        test_da_df = test_da_df._append([{'seq_before':padding(test_embedding[before_head]), 'seq_after':padding(test_embedding[after_head]), 
                                     'label':test_pkl['ddg'][i],'seq_len':seq_len}], ignore_index=True)
-        test_da_df2 = test_da_df2._append([{'seq_before':test_embedding[before_head], 'seq_after':test_embedding[before_head], 
-                                    'label':0,'seq_len':seq_len}], ignore_index=True)
+        #test_da_df2 = test_da_df2._append([{'seq_before':padding(test_embedding[before_head]), 'seq_after':padding(test_embedding[before_head]), 
+                                    #'label':0,'seq_len':seq_len}], ignore_index=True)
         # reversed items
-        test_da_df = test_da_df._append([{'seq_before':test_embedding[after_head], 'seq_after':test_embedding[before_head], 
+        test_da_df = test_da_df._append([{'seq_before':padding(test_embedding[after_head]), 'seq_after':padding(test_embedding[before_head]), 
                                     'label':-test_pkl['ddg'][i],'seq_len':seq_len}], ignore_index=True)
-        test_reversed_df = test_reversed_df._append([{'seq_before':test_embedding[after_head], 'seq_after':test_embedding[before_head], 
+        test_reversed_df = test_reversed_df._append([{'seq_before':padding(test_embedding[after_head]), 'seq_after':padding(test_embedding[before_head]), 
                                     'label':-test_pkl['ddg'][i],'seq_len':seq_len}], ignore_index=True)
-        test_da_df2 = test_da_df2._append([{'seq_before':test_embedding[after_head], 'seq_after':test_embedding[after_head], 
-                                    'label':0,'seq_len':seq_len}], ignore_index=True)
+        #test_da_df2 = test_da_df2._append([{'seq_before':padding(test_embedding[after_head]), 'seq_after':padding(test_embedding[after_head]), 
+                                    #'label':0,'seq_len':seq_len}], ignore_index=True)
     test_origin_df.to_pickle('../datasets/final/protein_embedding/test_stab_mcsm(ori)_' + key + '.pkl')
     test_da_df.to_pickle('../datasets/final/protein_embedding/test_stab_da(ori+rev)_' + key + '.pkl')
     test_reversed_df.to_pickle('../datasets/final/protein_embedding/test_stab_da(rev)_' + key + '.pkl')
-    test_da_df2.to_pickle('../datasets/final/protein_embedding/test_stab_da(non)_' + key + '.pkl')
+    #test_da_df2.to_pickle('../datasets/final/protein_embedding/test_stab_da(non)_' + key + '.pkl')
 print(test_da_df.head())
 '''
                                           seq_before                                          seq_after  label seq_len
@@ -147,9 +156,12 @@ print(test_da_df.head())
 '''
 
 # generate mcsm test set
-mcsm_test = pd.concat([test_origin_df,test_mcsm_reversed_df])
-mcsm_test = mcsm_test.reset_index(drop=True)
-mcsm_test.to_pickle('../datasets/final/protein_embedding/test_stab_mcsm(all)_' + key + '.pkl')
+for key in config_dict.keys():
+    test_origin_df = pd.read_pickle('../datasets/final/protein_embedding/test_stab_mcsm(ori)_' + key + '.pkl')
+    test_mcsm_reversed_df = pd.read_pickle('../datasets/final/protein_embedding/test_stab_mcsm(rev)_' + key + '.pkl')
+    mcsm_test = pd.concat([test_origin_df,test_mcsm_reversed_df])
+    mcsm_test = mcsm_test.reset_index(drop=True)
+    mcsm_test.to_pickle('../datasets/final/protein_embedding/test_stab_mcsm(all)_' + key + '.pkl')
 print(mcsm_test.head())
 '''
                                           seq_before                                          seq_after  label seq_len
