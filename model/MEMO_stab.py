@@ -32,7 +32,6 @@ def build_MEMO_stab(protein_embedding):
     num_heads = 4
     ff_dim = 256
     pos_embed_dim = 64
-    
 
     if(protein_embedding == 'no'):
         
@@ -40,7 +39,13 @@ def build_MEMO_stab(protein_embedding):
         input1 = Input(shape=(maxlen, 20+30), name = 'input_before') 
         input2 = Input(shape=(maxlen, 20+30), name = 'input_after') 
         input3 = Input(shape=(maxlen,), name = 'input_mask') 
-    #elif()
+    else:
+        embed_dim = 1288
+        pos_embed_dim = 1288
+        seq_embed_dim_bet = pos_embed_dim - protein_embedding
+        input1 = Input(shape=(maxlen, protein_embedding), name = 'input_before') 
+        input2 = Input(shape=(maxlen,protein_embedding), name = 'input_after') 
+        input3 = Input(shape=(maxlen,), name = 'input_mask') 
 
     before_mask = create_padding_mask(input3)
     after_mask = create_padding_mask(input3)
