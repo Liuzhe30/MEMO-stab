@@ -16,6 +16,8 @@ datasets/cleaned/
 datasets/protein_embedding/
 datasets/protein_embedding_fix/
 experiment/baseline_exp/model/
+experiment/exp_stability_prediction/images/
+experiment/exp_stability_prediction/protein_embedding/images/
 model/images/
 model/weights_noda/
 model/weights_da_rev/
