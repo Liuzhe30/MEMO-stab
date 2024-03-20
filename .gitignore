@@ -17,11 +17,10 @@ datasets/protein_embedding/
 datasets/protein_embedding_fix/
 experiment/baseline_exp/model/
 experiment/exp_stability_prediction/images/
-experiment/exp_stability_prediction/protein_embedding/images/
+experiment/exp_stability_prediction/images_hpc/
+experiment/exp_stability_prediction/merged_images/
+experiment/exp_stability_prediction/images_est1500/
 model/images/
-model/weights_noda/
-model/weights_da_rev/
-model/weights_da_rev_non/
 
 # middle scripts
 preprocess/test.py
