@@ -16,10 +16,7 @@ datasets/cleaned/
 datasets/protein_embedding/
 datasets/protein_embedding_fix/
 experiment/baseline_exp/model/
-experiment/exp_stability_prediction/images/
-experiment/exp_stability_prediction/images_hpc/
-experiment/exp_stability_prediction/merged_images/
-experiment/exp_stability_prediction/images_est1500/
+experiment/exp_stability_prediction/
 model/images/
 
 # middle scripts
