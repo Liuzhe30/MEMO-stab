@@ -28,8 +28,8 @@ Step 1. Generate the embedding of the pre-trained protein language model, save a
 |Model|Embedding dim|Resource|Model|Embedding dim|Resource|
 |:---:|:---:|:---:|:---:|:---:|:---:|
 |Esm2_t6|320|[Ref link]()|Esm2_t30|640|[Ref link]()
-|KeAP|1024|[Ref link]()|TAPE|768|[Download]()
-|ProtBert|1024|[DRef link]()|ProtBert-BFD|1024|[Ref link]()
+|KeAP|1024|[Ref link]()|TAPE|768|[Ref link]()
+|ProtBert|1024|[Ref link]()|ProtBert-BFD|1024|[Ref link]()
 |ProtT5-XL-UniRef50|1024|[Ref link]()|ProtT5-XL-BFD|1024|[Ref link]()
 
 Step 2. Flatten the arrays and feed them into the model.
