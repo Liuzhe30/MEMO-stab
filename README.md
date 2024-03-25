@@ -27,10 +27,10 @@ Step 1. Generate the embedding of the pre-trained protein language model, save a
 
 |Model|Embedding dim|Resource|Model|Embedding dim|Resource|
 |:---:|:---:|:---:|:---:|:---:|:---:|
-|Esm2_t6|320|[Ref link]()|Esm2_t30|640|[Ref link]()
-|KeAP|1024|[Ref link]()|TAPE|768|[Ref link]()
-|ProtBert|1024|[Ref link]()|ProtBert-BFD|1024|[Ref link]()
-|ProtT5-XL-UniRef50|1024|[Ref link]()|ProtT5-XL-BFD|1024|[Ref link]()
+|Esm2_t6|320|[Ref link](https://huggingface.co/facebook/esm2_t6_8M_UR50D)|Esm2_t30|640|[Ref link](https://huggingface.co/facebook/esm2_t30_150M_UR50D)
+|KeAP|1024|[Ref link](https://github.com/RL4M/KeAP)|TAPE|768|[Ref link](https://github.com/songlab-cal/tape)
+|ProtBert|1024|[Ref link](https://huggingface.co/Rostlab/prot_bert/tree/main)|ProtBert-BFD|1024|[Ref link](https://huggingface.co/Rostlab/prot_bert_bfd/tree/main)
+|ProtT5-XL-UniRef50|1024|[Ref link](https://huggingface.co/Rostlab/prot_t5_xl_uniref50/tree/main)|ProtT5-XL-BFD|1024|[Ref link](https://huggingface.co/Rostlab/prot_t5_xl_bfd/tree/main)
 
 Step 2. Flatten the arrays and feed them into the model.
 ```
