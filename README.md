@@ -23,7 +23,7 @@ We provide the [training set](datasets/annotation/train_stab.fasta) and the [tes
 
 ### Prepare your own dataset
 
-Step 1. Generate the embedding of the pre-trained protein language model, save as **embedding['seq_before']** and **embedding['seq_after']** (Numpy array with dimension: sample_number × padding_dim × protein_embedding_dim).
+Step 1. Generate the embedding of the pre-trained protein language model, save as **embedding['seq_before']** and **embedding['seq_after']** (Numpy arrays with dimension: sample_number × padding_dim × protein_embedding_dim).
 
 |Model|Embedding dim|Resource|Model|Embedding dim|Resource|
 |:---:|:---:|:---:|:---:|:---:|:---:|
@@ -33,14 +33,14 @@ Step 1. Generate the embedding of the pre-trained protein language model, save a
 |ProtT5-XL-UniRef50|1024|[Ref link](https://huggingface.co/Rostlab/prot_t5_xl_uniref50/tree/main)|ProtT5-XL-BFD|1024|[Ref link](https://huggingface.co/Rostlab/prot_t5_xl_bfd/tree/main)
 
 Step 2. Flatten the arrays and feed them into the model.
-```
-> sample_list = []
-> for i in range(your_sample_number):
->     feature_list = []
->     feature_list += embedding['seq_before'][i].flatten().tolist()
->     feature_list += embedding['seq_after'][i].flatten().tolist()
->     sample_list.append(feature_list)
-> X_train = np.array(sample_list) # than feed 'X_train' to the trained XGBoost model
+```python
+sample_list = []
+for i in range(your_sample_number):
+	feature_list = []
+	feature_list += embedding['seq_before'][i].flatten().tolist()
+	feature_list += embedding['seq_after'][i].flatten().tolist()
+	sample_list.append(feature_list)
+X_train = np.array(sample_list) # than feed 'X_train' to the trained XGBoost model
 ```
 
 Note: 
